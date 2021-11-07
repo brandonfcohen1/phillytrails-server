@@ -10,7 +10,7 @@
     "yarn": "^1.22.17"
   },
   "scripts": {
-    "server": "node server/index.js"
+    "start": "node server/index.js"
   },
   "browserslist": [
     ">0.2%",
