@@ -7,6 +7,7 @@ require("dotenv").config();
 // postgres
 const pg = require("pg");
 if (process.env.NODE_ENV == "production") {
+  console.log("prod");
   pg.defaults.ssl = true;
 }
 const conString = process.env.DATABASE_URL;
