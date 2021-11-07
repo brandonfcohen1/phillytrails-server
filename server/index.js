@@ -6,17 +6,7 @@ require("dotenv").config();
 
 // postgres
 const pg = require("pg");
-const conString =
-  "postgres://" +
-  process.env.PGUSER +
-  ":" +
-  process.env.PGPASSWORD +
-  "@" +
-  process.env.PGHOST +
-  ":" +
-  process.env.PGPORT +
-  "/" +
-  process.env.PGDATABASE;
+const conString = process.env.DATABASE_URL;
 const client = new pg.Client(conString);
 client.connect();
 
