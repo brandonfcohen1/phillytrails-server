@@ -8,7 +8,7 @@ require("dotenv").config();
 const cors = require("cors");
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://phillytrails.onrender.com/"],
+    origin: ["http://localhost:3000", "https://phillytrails.onrender.com"],
   })
 );
 
