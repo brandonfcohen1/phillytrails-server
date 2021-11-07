@@ -6,7 +6,9 @@ require("dotenv").config();
 
 // postgres
 const pg = require("pg");
-pg.defaults.ssl = true;
+if (process.env.NODE_ENV == "production") {
+  pg.defaults.ssl = true;
+}
 const conString = process.env.DATABASE_URL;
 const client = new pg.Client(conString);
 client.connect();
@@ -16,7 +18,7 @@ app.get("/", (req, res) => {
 });
 
 // TODO: error handling for bad table names
-app.get("/api/geojson/:table", (req, res) => {
+app.get("/api/v3/geojson/:table", (req, res) => {
   const table = req.params.table;
   client
     .query("SELECT ST_AsGeoJSON(" + table + ".*, 'geom') FROM " + table + ";")
@@ -24,6 +26,45 @@ app.get("/api/geojson/:table", (req, res) => {
       res.send({
         type: "FeatureCollection",
         features: result.rows.map((r) => JSON.parse(r.st_asgeojson)),
+      });
+    });
+});
+
+app.get("/api/geojson/:table", (req, res) => {
+  const table = req.params.table;
+
+  client
+    .query("SELECT * FROM " + table + " WHERE false;")
+    .then((result) => {
+      const props = result.fields
+        .map((p) => p.name)
+        .filter((p) => p != "id_0")
+        .filter((p) => p != "OBJECTID")
+        .filter((p) => p != "geom");
+      let proplist = "";
+      for (let i = 0; i < props.length; i++) {
+        proplist += "'" + props[i] + "', " + props[i] + ", ";
+      }
+      return proplist;
+    })
+    .then((proplist) => {
+      const queryString =
+        `SELECT json_build_object(
+        'type',       'Feature',
+        'geometry',   ST_AsGeoJSON(geom)::json,
+        'properties', json_build_object(` +
+        proplist.substring(0, proplist.length - 2) +
+        `
+         )
+     )
+     FROM ` +
+        table +
+        `;`;
+      client.query(queryString).then((result) => {
+        res.send({
+          type: "FeatureCollection",
+          features: result.rows.map((r) => r.json_build_object),
+        });
       });
     });
 });
