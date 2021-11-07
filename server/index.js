@@ -4,18 +4,30 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 require("dotenv").config();
 
+// CORS
+const cors = require("cors");
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://phillytrails.onrender.com/"],
+  })
+);
+
 // postgres
 const pg = require("pg");
-// if (process.env.NODE_ENV == "production") {
-//   console.log("prod");
-//   pg.defaults.ssl = true;
-// }
-const client = new pg.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+
+let client;
+if (process.env.NODE_ENV == "production") {
+  client = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: ssl,
+    },
+  });
+} else {
+  client = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+}
 client.connect();
 
 app.get("/", (req, res) => {
