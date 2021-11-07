@@ -11,6 +11,10 @@ const conString = process.env.DATABASE_URL;
 const client = new pg.Client(conString);
 client.connect();
 
+app.get("/", (req, res) => {
+  res.send({ health: "OK" });
+});
+
 // TODO: error handling for bad table names
 app.get("/api/geojson/:table", (req, res) => {
   const table = req.params.table;
@@ -42,5 +46,5 @@ app.get("/api/center/trail/:id", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`, '0.0.0.0');
+  console.log(`Server listening on ${PORT}`, "0.0.0.0");
 });
