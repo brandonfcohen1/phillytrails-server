@@ -6,12 +6,16 @@ require("dotenv").config();
 
 // postgres
 const pg = require("pg");
-if (process.env.NODE_ENV == "production") {
-  console.log("prod");
-  pg.defaults.ssl = true;
-}
-const conString = process.env.DATABASE_URL;
-const client = new pg.Client(conString);
+// if (process.env.NODE_ENV == "production") {
+//   console.log("prod");
+//   pg.defaults.ssl = true;
+// }
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 client.connect();
 
 app.get("/", (req, res) => {
