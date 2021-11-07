@@ -20,7 +20,7 @@ if (process.env.NODE_ENV == "production") {
   client = new pg.Client({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-      rejectUnauthorized: ssl,
+      rejectUnauthorized: false,
     },
   });
 } else {
