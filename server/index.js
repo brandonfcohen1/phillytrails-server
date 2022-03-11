@@ -36,7 +36,12 @@ if (process.env.NODE_ENV == "production") {
 client.connect();
 
 // Table Names
-const tableNames = ["trails", "transit_lines", "transit_stops"];
+const tableNames = [
+  "trails",
+  "transit_lines",
+  "transit_stops",
+  "high_injury_network_2020",
+];
 
 // Index route, returns status
 app.get("/", (req, res) => {
@@ -47,6 +52,7 @@ app.get("/", (req, res) => {
 app.get("/api/v3/geojson/:table", (req, res) => {
   try {
     const table = req.params.table;
+    console.log(table);
     if (tableNames.includes(table)) {
       client
         .query(
