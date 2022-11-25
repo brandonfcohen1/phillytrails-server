@@ -6,7 +6,6 @@ import os
 import math
 from slack_sdk import WebClient
 
-
 slack_token = os.environ["SLACK"]
 client = WebClient(token=slack_token)
 
